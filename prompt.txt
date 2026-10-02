@@ -1,0 +1,34 @@
+Rôle : Tu es un expert en Computer Vision sous Python.
+Contrainte absolue : N'utilise PAS OpenCV (cv2). Utilise uniquement PIL, numpy, matplotlib.pyplot, scipy.signal.convolve2d, math, os et glob.
+
+Objectif : Écris un script complet de traitement par lot ("batch processing") qui combine du recalage interactif (Registration) et du filtrage spatial (Filtering) pour 10 images maximum.
+
+Instructions étape par étape :
+
+Filtrage (Création manuelle) :
+
+Crée une fonction creer_noyau_gaussien(size=21, sigma=5) qui génère un noyau Gaussien 2D en utilisant np.linspace et np.meshgrid, puis la formule mathématique de la distribution gaussienne normalisée pour que la somme fasse 1.
+
+Crée une fonction apply_filters(image_array) qui applique ce noyau Gaussien avec scipy.signal.convolve2d(..., mode='same'). Dans cette même fonction, crée les matrices 3x3 classiques de Sobel X (bords verticaux) et Sobel Y (bords horizontaux) et applique-les également avec convolve2d. Retourne les 3 résultats.
+
+Registration et Traitement par lot :
+
+Crée une fonction process_full_batch(dossier_source, max_images=10, target_size=(200, 100)).
+
+Scanne le dossier avec glob. Fais une boucle sur les fichiers trouvés.
+
+Pour chaque image, convertis-la en niveaux de gris ('L') avec PIL.
+
+Affiche l'image avec matplotlib et utilise plt.ginput(n=2, timeout=0) pour forcer l'utilisateur à cliquer sur 2 points de référence. Ferme la figure dès que les clics sont faits.
+
+Calcule l'écart (dx, dy), déduis l'angle d'inclinaison avec math.atan2, convertis en degrés, et effectue une rotation avec img.rotate(..., resample=Image.BICUBIC, expand=True). Redimensionne ensuite à target_size.
+
+Convertis l'image alignée en numpy array de type float, et passe-la à la fonction apply_filters.
+
+Interface de Résultat :
+
+Stocke les résultats en mémoire. À la fin de la boucle, génère une grille plt.subplots dynamique comportant autant de lignes que d'images traitées, et 4 colonnes.
+
+Les colonnes doivent afficher : 1. L'image recalée, 2. Le filtre Gaussien, 3. Sobel X, 4. Sobel Y.
+
+Supprime les axes (axis('off')) et utilise plt.tight_layout(). Ajoute des docstrings et des blocs try/except.
